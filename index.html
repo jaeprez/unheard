@@ -96,6 +96,9 @@ footer{position:fixed;left:0;right:0;bottom:0;height:var(--foot);z-index:60;disp
   background:var(--shade);backdrop-filter:blur(14px)}
 footer .seg{display:flex;align-items:center;gap:11px}
 #saveState{font-size:9.5px;letter-spacing:.14em;white-space:nowrap;flex:none}
+#verTag{font-size:9.5px;letter-spacing:.1em;white-space:nowrap;flex:none;color:var(--dim)}
+#verTag:hover{color:var(--fg)}
+#verTag.stale{color:var(--signal);font-weight:500}
 #saveState.ok{color:var(--dim)}
 #saveState.danger{color:var(--signal);font-weight:500}
 #nosave{position:fixed;top:var(--bar);left:0;right:0;z-index:58;display:none;align-items:center;gap:12px;
@@ -138,14 +141,15 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 }
 .todayGrid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
   gap:clamp(28px,5vw,72px);align-items:center;width:100%;max-width:1180px;box-sizing:border-box}
-.plate{position:relative;aspect-ratio:1;max-width:min(46vh,520px);width:100%;justify-self:end;
-  perspective:1200px}
+.plateWrap{display:flex;flex-direction:column;gap:9px;width:100%;
+  max-width:min(46vh,520px);justify-self:end}
+.plate{position:relative;aspect-ratio:1;width:100%;perspective:1200px}
 .plate .inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;
   transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 .plate img{width:100%;height:100%;object-fit:cover;display:block;
   box-shadow:0 50px 90px -30px rgba(0,0,0,.85),0 0 0 1px var(--line)}
-.plate .num{position:absolute;left:0;top:-24px;font-family:var(--m);font-size:9.5px;
-  color:var(--dim);letter-spacing:.14em}
+.plateWrap .num{font-family:var(--m);font-size:9.5px;color:var(--dim);letter-spacing:.14em;
+  line-height:1}
 .todayCol{min-width:0}
 .eyebrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:clamp(16px,3vw,30px)}
 .eyebrow .dash{height:1px;width:44px;background:var(--signal)}
@@ -181,12 +185,12 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   box-shadow:0 1px 0 rgba(17,17,16,.10),0 12px 26px -14px rgba(17,17,16,.55);
   outline:1px solid var(--line);outline-offset:-1px;transition:box-shadow .35s}
 .cell:hover .thumb{box-shadow:0 30px 60px -18px rgba(17,17,16,.6)}
-.cell .plate{display:none;padding:8px 1px 0}
-.cell .plate b{display:block;font-size:11px;font-weight:600;line-height:1.25;letter-spacing:-.01em;
+.cell .slug{display:none;padding:8px 1px 0}
+.cell .slug b{display:block;font-size:11px;font-weight:600;line-height:1.25;letter-spacing:-.01em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cell .plate span{display:block;font-family:var(--m);font-size:9px;color:var(--dim);margin-top:3px;
+.cell .slug span{display:block;font-family:var(--m);font-size:9px;color:var(--dim);margin-top:3px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sheet-grid.labelled .cell .plate{display:block}
+.sheet-grid.labelled .cell .slug{display:block}
 .sheet-grid.labelled .cell .cap{display:none}
 .cell .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .sheet-grid:hover .cell{filter:saturate(.5) brightness(.8)}
@@ -233,29 +237,36 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   padding:6px clamp(18px,3.4vw,48px) clamp(14px,3vh,40px);
   overflow-x:hidden;overflow-y:auto;scrollbar-width:thin}
 .look{width:100%;min-width:0;display:flex;flex-direction:column}
-.look .no{display:flex;align-items:center;gap:9px;font-family:var(--m);font-size:10px;
-  letter-spacing:.16em;color:var(--dim);margin-bottom:11px}
-.look .no em{font-style:normal;color:var(--signal);font-size:8.5px;letter-spacing:.2em}
-.look .no s{text-decoration:none;color:var(--dim);font-size:8.5px;letter-spacing:.2em}
+/* the queue line: position and commitment up top, identity underneath */
+.look .no{display:flex;align-items:baseline;gap:7px;font-family:var(--m);font-size:9.5px;
+  letter-spacing:.14em;color:var(--dim);margin-bottom:7px;white-space:nowrap}
+.look .no em{font-style:normal;color:var(--signal);font-size:8px;letter-spacing:.18em}
+.look .no s{text-decoration:none;font-size:8px;letter-spacing:.18em;opacity:.7}
+.look .no .trk{margin-left:auto;font-size:9px;letter-spacing:.1em;color:var(--fg);
+  overflow:hidden;text-overflow:ellipsis}
+.look .no .trk i{font-style:normal;color:var(--dim)}
+.rail.tight .look .no .trk i{display:none}
 .look .frame{position:relative;aspect-ratio:1;cursor:pointer;background:#141413;
-  box-shadow:0 32px 62px -26px rgba(0,0,0,.9);transition:transform .42s cubic-bezier(.2,.8,.2,1)}
-.look:hover .frame{transform:translateY(-9px)}
+  box-shadow:0 26px 52px -24px rgba(0,0,0,.9);transition:transform .42s cubic-bezier(.2,.8,.2,1)}
+.look:hover .frame{transform:translateY(-6px)}
 .look .frame img{width:100%;height:100%;object-fit:cover;display:block}
 .look.heard .frame img{filter:grayscale(1) brightness(.48)}
-.look .cap{border-top:1px solid var(--line);margin-top:13px;padding-top:10px;height:54px;overflow:hidden}
-.look .cap b{font-size:12px;font-weight:600;line-height:1.25;letter-spacing:-.01em;
-  overflow-wrap:break-word;word-break:normal;hyphens:none;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.look .cap span{display:block;font-family:var(--m);font-size:9.5px;color:var(--dim);margin-top:4px;
+/* controls sit on the sleeve so they cost no vertical space */
+.look .ord{position:absolute;left:5px;bottom:5px;z-index:2;display:flex;gap:3px}
+.look .drop{position:absolute;right:5px;top:5px;z-index:2}
+.look .ord button,.look .drop{width:21px;height:21px;display:flex;align-items:center;
+  justify-content:center;color:rgba(244,243,239,.82);background:rgba(10,10,9,.55);
+  border:1px solid rgba(244,243,239,.22);backdrop-filter:blur(5px);transition:.16s}
+.look .ord button:hover,.look .drop:hover{background:rgba(244,243,239,.92);color:#0B0B0A;
+  border-color:transparent}
+.look .drop:hover{background:var(--signal);color:#fff}
+.look .ord svg,.look .drop svg{width:9px;height:9px;display:block;fill:none;stroke:currentColor;
+  stroke-width:2.4;stroke-linecap:square}
+.look .cap{border-top:1px solid var(--line);margin-top:9px;padding-top:7px}
+.look .cap b{display:block;font-size:11.5px;font-weight:600;line-height:1.2;letter-spacing:-.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.look .ctl{display:flex;gap:5px;margin-top:9px;opacity:0;transition:opacity .2s}
-.look .ctl svg{width:12px;height:12px;display:block;fill:none;stroke:currentColor;stroke-width:2.1;
-  stroke-linecap:square}
-.look:hover .ctl,.look:focus-within .ctl{opacity:1}
-.look .ctl button{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;
-  color:var(--dim);border:1px solid var(--line);padding:7px 0;transition:.18s}
-.look .ctl button:hover{color:var(--fg);border-color:var(--fg)}
-.look .ctl button[data-a="x"]:hover{color:var(--signal);border-color:var(--signal)}
+.look .cap span{display:block;font-family:var(--m);font-size:9px;color:var(--dim);margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .carry{display:none;align-items:center;gap:14px;flex:none;padding:13px clamp(20px,4vw,54px);
   border-top:1px solid var(--line);font-family:var(--m);font-size:10px;color:var(--dim);letter-spacing:.06em}
 .carry.on{display:flex}
@@ -402,7 +413,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 @media (max-width:760px){
   :root{--barH:88px}
   .weekhead{flex-direction:column;align-items:flex-start;gap:4px;padding-bottom:2px}
-  .weekdate{font-size:clamp(24px,7.4vw,40px);margin-top:4px}
+  .weekdate{font-size:clamp(23px,6.6vw,36px);margin-top:3px}
   .meter{min-width:0;width:100%;text-align:left}
   .mline{max-width:170px}
   .turnhint{display:none}
@@ -422,7 +433,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   footer .seg{gap:9px}
   #saveState{font-size:8.5px;letter-spacing:.1em}
   .ghost{padding:8px 10px;letter-spacing:.14em}
-  .todayGrid{gap:22px;max-width:460px;padding-top:38px}
+  .todayGrid{gap:22px;max-width:460px;padding-top:22px}
 }
 @media (max-width:900px){
   .look .cap{height:46px;margin-top:10px;padding-top:8px}
@@ -431,7 +442,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   .rt{gap:9px}
   .tally{display:none}
   .todayGrid{grid-template-columns:1fr;gap:26px;max-width:440px}
-  .plate{justify-self:start;max-width:min(38vh,320px)}
+  .plateWrap{justify-self:start;max-width:min(38vh,320px)}
   .eyebrow .dash{width:26px}
   .sheetBody{grid-template-columns:1fr;gap:24px}
   footer{gap:11px;padding:0 calc(14px + var(--safeR)) var(--safeB) calc(14px + var(--safeL))}
@@ -445,16 +456,21 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 @media (hover:none){
   /* nothing here can rely on hovering */
   .cell .pullbtn{opacity:1}
-  .look .ctl{opacity:1}
   .sheet-grid:hover .cell{filter:none}
   .sheet-grid .cell:hover{transform:none}
   .cell:hover .thumb img{transform:none}
   .cell .cap{display:none}
   .look:hover .frame{transform:none}
   nav button{padding-top:13px;padding-bottom:13px}
-  .look .ctl button{padding:9px 0}
+  .look .ord button,.look .drop{width:25px;height:25px}
   .srcsw button{padding:10px 12px}
   .cell .pullbtn{padding:7px 9px}
+}
+@media (max-height:540px){
+  .weekhead{flex-direction:row;align-items:baseline;gap:12px;padding-top:10px;padding-bottom:0}
+  .weekdate{font-size:clamp(19px,3.4vw,30px);margin-top:0}
+  .meter{width:auto;min-width:0;text-align:right}
+  .mline{max-width:120px}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.05s!important;animation:none!important}
@@ -529,6 +545,8 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   <div class="seg" id="fMid"></div>
   <div class="spacer"></div>
   <div class="mn" id="fMeta"></div>
+  <div class="rule"></div>
+  <button class="mn" id="verTag" title="Build — tap for details"></button>
   <div class="rule"></div>
   <button class="mn ok" id="saveState" title="">READY</button>
 </footer>
@@ -606,6 +624,11 @@ Sault – Untitled (Rise)"></textarea>
     <button class="xx" id="menuX">Close</button>
     <h2>Archive</h2>
     <p class="note" id="stats">—</p>
+    <div class="lb" style="margin-bottom:9px">Build</div>
+    <p class="note" id="buildNote" style="margin-bottom:10px">—</p>
+    <div class="acts" style="margin-bottom:26px">
+      <button class="ghost" id="updBtn">Check for update</button>
+    </div>
     <div class="lb" style="margin-bottom:9px">Storage</div>
     <p class="note" id="storeNote" style="margin-bottom:10px">—</p>
     <table id="storeAudit"></table>
@@ -631,6 +654,10 @@ Sault – Untitled (Rise)"></textarea>
 <script>
 (function(){
 "use strict";
+/* Bump APP_VERSION on every build. The updater below reads this exact string back
+   off the server, so the app can tell you whether what you are looking at is current. */
+var APP_VERSION = "1.7.1";
+var APP_BUILT   = "2026-10-03";
 var $=function(s){ return document.querySelector(s); };
 var $$=function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
@@ -831,7 +858,7 @@ var SIZES={s:{wide:14,tight:4},m:{wide:8,tight:2},l:{wide:5,tight:1}};
 function colsFor(){ var k=SIZES[S.size]||SIZES.m; return narrow()?k.tight:k.wide; }
 var SORTS=["ADDED","ARTIST","YEAR","GENRE"];
 var SHOW=["UNHEARD","ALL","HEARD"];
-var S={ albums:[], lock:null, todayPref:"pulls", view:"today", sort:0, show:0, genre:null, size:"m", allowSingles:false,
+var S={ albums:[], lock:null, remoteVer:null, todayPref:"pulls", view:"today", sort:0, show:0, genre:null, size:"m", allowSingles:false,
         list:[], cat:{}, pullIdx:{}, today:null, todaySrc:"archive", sIdx:-1 };
 
 /* ================= catalogue lookup (verified against the API) ================= */
@@ -1086,8 +1113,10 @@ function renderToday(){
   var days=["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
   el.innerHTML=
    '<div class="todayGrid">'+
-    '<div class="plate" id="plate"><div class="num">'+esc(catNo(a))+'</div>'+
-      '<div class="inner"><img src="'+esc(a.artBig||a.art)+'" alt="'+esc(a.title)+'"></div></div>'+
+    '<div class="plateWrap"><div class="num">'+esc(catNo(a))+'</div>'+
+      '<div class="plate" id="plate">'+
+        '<div class="inner"><img src="'+esc(a.artBig||a.art)+'" alt="'+esc(a.title)+'"></div>'+
+      '</div></div>'+
     '<div class="todayCol">'+
       '<div class="eyebrow"><span class="dash"></span><span class="lb">'+days[d.getDay()]+" "+
         pad(d.getDate(),2)+" "+MON[d.getMonth()]+" "+d.getFullYear()+" · "+
@@ -1153,39 +1182,51 @@ function fitTitle(el,text){
 function row(k,v){ return '<div><dt>'+k+'</dt><dd>'+esc(v)+'</dd></div>'; }
 
 /* ================= PULLS ================= */
+/* Solve for the biggest sleeve that still shows the whole week at once.
+   For each column count the width and the height each impose a ceiling; take the
+   lower of the two and keep whichever arrangement yields the largest cover. */
 function fitLineup(n){
   var rail=$("#rail"), wrap=document.querySelector(".railwrap");
   if(!rail||!wrap||!n) return;
   var W=wrap.clientWidth, H=wrap.clientHeight;
   if(!W||!H) return;
-  var narrow=W<760;
-  var padX=narrow?18:48, padY=narrow?20:46;
-  var gap=narrow?12:Math.min(34,Math.round(W*0.022));
-  var minW=narrow?92:112, maxW=268;
-  /* everything below the cover: numeral, caption, controls */
-  var probe=rail.querySelector(".look"), extra=narrow?112:140;
+  var tight=W<760;
+  var padX=tight?16:44, padY=tight?16:38;
+  var gap=tight?10:Math.min(30,Math.round(W*0.02));
+  var maxW=tight?300:264;
+  var probe=rail.querySelector(".look"), extra=tight?62:76;   /* numeral row + caption */
   if(probe){
     var fr=probe.querySelector(".frame");
-    if(fr&&fr.offsetHeight) extra=Math.max(70,probe.offsetHeight-fr.offsetHeight);
+    if(fr&&fr.offsetHeight) extra=Math.max(38,probe.offsetHeight-fr.offsetHeight);
   }
-  var pick=null;
-  for(var c=Math.min(n,MAXPULL);c>=1;c--){
-    var cw=Math.floor((W-padX*2-gap*(c-1))/c);
-    if(cw>maxW) cw=maxW;
-    if(cw<minW) continue;
+  var best=null;
+  for(var c=1;c<=Math.min(n,MAXPULL);c++){
     var rows=Math.ceil(n/c);
-    if(rows*(cw+extra)+(rows-1)*gap<=H-padY){ pick={c:c,cw:cw}; break; }
+    var byWidth=(W-padX*2-gap*(c-1))/c;
+    var byHeight=(H-padY-(rows-1)*gap)/rows-extra;
+    var cw=Math.floor(Math.min(byWidth,byHeight,maxW));
+    if(cw<46) continue;
+    if(!best||cw>best.cw) best={c:c,cw:cw,rows:rows};
   }
-  if(!pick){                       /* too small to fit: wrap tight and scroll down, never sideways */
-    var c2=Math.max(1,Math.floor((W-padX*2+gap)/(minW+gap)));
-    pick={c:Math.min(c2,n),cw:minW};
+  var fits=!!best;
+  if(!best){                       /* smaller than we can usefully draw: wrap and scroll down */
+    var c2=Math.max(1,Math.floor((W-padX*2+gap)/(70+gap)));
+    best={c:Math.min(c2,n),cw:70};
   }
-  var rows=Math.ceil(n/pick.c);
-  var needed=rows*(pick.cw+extra)+(rows-1)*gap;
-  rail.style.setProperty("--align", needed<=H-padY ? "center" : "start");
-  rail.style.setProperty("--cols",pick.c);
-  rail.style.setProperty("--cw",pick.cw+"px");
+  rail.style.setProperty("--cols",best.c);
+  rail.style.setProperty("--cw",best.cw+"px");
   rail.style.setProperty("--gap",gap+"px");
+  rail.style.setProperty("--align","start");
+  var cw=best.cw;
+  for(var k=0;k<4;k++){                       /* verify against the real layout, not the estimate */
+    if(rail.scrollHeight<=rail.clientHeight+1) break;
+    cw=Math.floor(cw*0.88);
+    if(cw<46){ cw=46; rail.style.setProperty("--cw","46px"); break; }
+    rail.style.setProperty("--cw",cw+"px");
+  }
+  var settled=rail.scrollHeight<=rail.clientHeight+1;
+  rail.style.setProperty("--align", settled?"center":"start");
+  rail.classList.toggle("tight",cw<140);
 }
 var ICO={
  prev:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>',
@@ -1215,18 +1256,22 @@ function renderPulls(){
       var el=document.createElement("div");
       el.className="look"+(a.played?" heard":"");
       var tag=a.played?"<s>Heard</s>":(today&&today.id===a.id?"<em>Today</em>":"");
-      el.innerHTML='<div class="no">'+pad(i+1,2)+tag+'</div>'+
-        '<div class="frame" tabindex="0"><img src="'+esc(a.artBig||a.art)+'" alt="'+esc(a.title)+'"></div>'+
-        '<div class="cap"><b>'+esc(a.title)+'</b><span>'+esc(a.artist)+'</span></div>'+
-        '<div class="ctl">'+
-          '<button data-a="l" aria-label="Move earlier" title="Move earlier">'+ICO.prev+'</button>'+
-          '<button data-a="r" aria-label="Move later" title="Move later">'+ICO.next+'</button>'+
-          '<button data-a="x" aria-label="Release from the week" title="Release">'+ICO.drop+'</button>'+
-        '</div>';
+      var trk=(a.tracks?pad(a.tracks,2)+" TRK":"")+(a.year?'<i> \u00b7 '+esc(a.year)+'</i>':"");
+      el.innerHTML='<div class="no">'+pad(i+1,2)+tag+
+          '<span class="trk">'+trk+'</span></div>'+
+        '<div class="frame" tabindex="0">'+
+          '<img src="'+esc(a.artBig||a.art)+'" alt="'+esc(a.title)+'">'+
+          '<div class="ord">'+
+            '<button data-a="l" aria-label="Move earlier" title="Move earlier">'+ICO.prev+'</button>'+
+            '<button data-a="r" aria-label="Move later" title="Move later">'+ICO.next+'</button>'+
+          '</div>'+
+          '<button class="drop" data-a="x" aria-label="Release from the week" title="Release">'+ICO.drop+'</button>'+
+        '</div>'+
+        '<div class="cap"><b>'+esc(a.title)+'</b><span>'+esc(a.artist)+'</span></div>';
       var f=el.querySelector(".frame");
       f.addEventListener("click",function(){ openSheet(a); });
       f.addEventListener("keydown",function(e){ if(e.key==="Enter") openSheet(a); });
-      el.querySelectorAll(".ctl button").forEach(function(b){
+      el.querySelectorAll(".ord button,.drop").forEach(function(b){
         b.addEventListener("click",function(e){
           e.stopPropagation();
           var k=b.dataset.a;
@@ -1278,7 +1323,7 @@ function buildCell(a){
       '<button class="pullbtn"></button>'+
       '<div class="cap"><b></b><span></span></div>'+
     '</div>'+
-    '<div class="plate"><b></b><span></span></div>';
+    '<div class="slug"><b></b><span></span></div>';
   var img=c.querySelector("img");
   if(img.getAttribute("src")!==a.art) img.src=a.art;
   img.alt=a.title;
@@ -1302,8 +1347,8 @@ function updateCell(c,a){
   var sub=esc(a.artist)+" \u00b7 "+esc(a.year||a.genre);
   c.querySelector(".cap b").textContent=a.title;
   c.querySelector(".cap span").innerHTML=sub;
-  c.querySelector(".plate b").textContent=a.title;
-  c.querySelector(".plate span").innerHTML=sub;
+  c.querySelector(".slug b").textContent=a.title;
+  c.querySelector(".slug span").innerHTML=sub;
 }
 function renderIndex(){
   var g=$("#grid"), list=S.list, host=$("#index");
@@ -1774,6 +1819,45 @@ $("#sampleBtn").addEventListener("click",function(){
 });
 
 /* ================= menu ================= */
+/* Reads the live file off the server, bypassing every cache, and compares versions.
+   GitHub Pages holds HTML for ~10 minutes, so a fresh deploy can otherwise look identical. */
+function remoteVersion(){
+  var u=location.pathname.replace(/[^/]*$/,"")+"index.html?v="+Date.now();
+  return fetch(u,{cache:"no-store"}).then(function(r){ return r.text(); })
+    .then(function(t){
+      var m=t.match(/APP_VERSION\s*=\s*"([^"]+)"/);
+      return m?m[1]:null;
+    }).catch(function(){ return null; });
+}
+function applyUpdate(){
+  var jobs=[];
+  if(window.caches){
+    /* drop the page shell but keep every sleeve already on the device */
+    jobs.push(caches.keys().then(function(ks){
+      return Promise.all(ks.filter(function(k){ return k.indexOf("art")<0; })
+        .map(function(k){ return caches.delete(k); }));
+    }).catch(function(){}));
+  }
+  if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration){
+    jobs.push(navigator.serviceWorker.getRegistration()
+      .then(function(r){ return r?r.update():null; }).catch(function(){}));
+  }
+  Promise.all(jobs).catch(function(){}).then(function(){
+    location.replace(location.pathname+"?v="+Date.now());
+  });
+}
+function renderBuild(remote){
+  var n=$("#buildNote");
+  var line="Version "+APP_VERSION+" \u00b7 built "+APP_BUILT;
+  if(remote&&remote!==APP_VERSION){
+    n.innerHTML=esc(line)+"<br><span style='color:var(--signal)'>Version "+esc(remote)+
+      " is live on the server \u2014 tap Check for update to load it.</span>";
+  } else if(remote){
+    n.textContent=line+" \u00b7 up to date";
+  } else {
+    n.textContent=line;
+  }
+}
 function renderMenu(){
   var g={}; S.albums.forEach(function(a){ g[a.genre]=1; });
   var un=S.albums.filter(function(a){ return !a.played; }).length;
@@ -1798,6 +1882,8 @@ function renderMenu(){
         state+(r.verified?" · verified":" · unverified")+'</td></tr>';
     }).join("");
   });
+  renderBuild(S.remoteVer);
+  remoteVersion().then(function(v){ S.remoteVer=v; renderBuild(v); });
   var lb=$("#linkBtn");
   lb.textContent=Backup.handle?("Linked · "+Backup.name):"Link a backup file";
   lb.classList.toggle("fill",!Store.live()&&!Backup.handle);
@@ -1805,8 +1891,17 @@ function renderMenu(){
 }
 $("#menuBtn").addEventListener("click",function(){ renderMenu(); $("#menuPanel").classList.add("on"); });
 $("#linkBtn").addEventListener("click",linkBackupFile);
+$("#updBtn").addEventListener("click",function(){
+  var b=this; b.textContent="Checking…";
+  remoteVersion().then(function(v){
+    if(v&&v!==APP_VERSION){ b.textContent="Loading "+v+"…"; applyUpdate(); }
+    else { b.textContent="Already current"; setTimeout(function(){ b.textContent="Check for update"; },1800); }
+  });
+});
 $("#nosaveFix").addEventListener("click",function(){ renderMenu(); $("#menuPanel").classList.add("on"); });
 $("#saveState").addEventListener("click",function(){ renderMenu(); $("#menuPanel").classList.add("on"); });
+$("#verTag").textContent="v"+APP_VERSION;
+$("#verTag").addEventListener("click",function(){ renderMenu(); $("#menuPanel").classList.add("on"); });
 $("#restoreBtn").addEventListener("click",function(){
   Store.read(BAK).then(function(p){
     var rows=unwrap(p);
@@ -1920,6 +2015,19 @@ window.addEventListener("resize",function(){
 /* ================= boot ================= */
 Store.init();
 updateSaveUI();
+if(location.search.indexOf("v=")>=0&&window.history&&history.replaceState){
+  try{ history.replaceState(null,"",location.pathname); }catch(e){}
+}
+setTimeout(function(){
+  remoteVersion().then(function(v){
+    S.remoteVer=v;
+    if(v&&v!==APP_VERSION){
+      $("#verTag").textContent="v"+APP_VERSION+" \u2192 "+v;
+      $("#verTag").classList.add("stale");
+      toast("Version "+v+" is available \u2014 tap the version in the footer");
+    }
+  });
+},2500);
 Promise.all([load(),loadLock(),loadPrefs()]).then(function(r){
   S.albums=Array.isArray(r[0])?r[0]:[];
   S.lock=r[1]||null;
