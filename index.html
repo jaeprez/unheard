@@ -144,7 +144,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 .plate img{width:100%;height:100%;object-fit:cover;display:block;
   box-shadow:0 50px 90px -30px rgba(0,0,0,.85),0 0 0 1px var(--line)}
-.plate .num{position:absolute;left:-9px;top:-26px;font-family:var(--m);font-size:9.5px;
+.plate .num{position:absolute;left:0;top:-24px;font-family:var(--m);font-size:9.5px;
   color:var(--dim);letter-spacing:.14em}
 .todayCol{min-width:0}
 .eyebrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:clamp(16px,3vw,30px)}
@@ -173,9 +173,9 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 
 /* ---------- INDEX ---------- */
 #index{overflow-y:auto;overflow-x:hidden}
-.sheet-grid{display:grid;grid-template-columns:repeat(var(--cols,8),1fr);
+.sheet-grid{display:grid;grid-template-columns:repeat(var(--cols,8),minmax(0,1fr));
   gap:clamp(7px,1vw,15px);padding:clamp(12px,1.6vw,22px)}
-.cell{position:relative;cursor:pointer;background:transparent;
+.cell{position:relative;cursor:pointer;background:transparent;min-width:0;
   transition:filter .3s ease,transform .35s cubic-bezier(.2,.8,.2,1);transform-origin:center}
 .cell .thumb{position:relative;aspect-ratio:1;overflow:hidden;background:#0e0e0d;
   box-shadow:0 1px 0 rgba(17,17,16,.10),0 12px 26px -14px rgba(17,17,16,.55);
@@ -229,7 +229,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 .railwrap{flex:1;position:relative;min-height:0}
 .rail{position:absolute;inset:0;display:grid;
   grid-template-columns:repeat(var(--cols,5),var(--cw,220px));
-  gap:var(--gap,28px);justify-content:center;align-content:center;
+  gap:var(--gap,28px);justify-content:center;align-content:var(--align,center);
   padding:6px clamp(18px,3.4vw,48px) clamp(14px,3vh,40px);
   overflow-x:hidden;overflow-y:auto;scrollbar-width:thin}
 .look{width:100%;min-width:0;display:flex;flex-direction:column}
@@ -249,10 +249,13 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 .look .cap span{display:block;font-family:var(--m);font-size:9.5px;color:var(--dim);margin-top:4px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .look .ctl{display:flex;gap:5px;margin-top:9px;opacity:0;transition:opacity .2s}
+.look .ctl svg{width:12px;height:12px;display:block;fill:none;stroke:currentColor;stroke-width:2.1;
+  stroke-linecap:square}
 .look:hover .ctl,.look:focus-within .ctl{opacity:1}
-.look .ctl button{font-size:8px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
-  color:var(--dim);border:1px solid var(--line);padding:5px 7px;transition:.18s}
+.look .ctl button{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;
+  color:var(--dim);border:1px solid var(--line);padding:7px 0;transition:.18s}
 .look .ctl button:hover{color:var(--fg);border-color:var(--fg)}
+.look .ctl button[data-a="x"]:hover{color:var(--signal);border-color:var(--signal)}
 .carry{display:none;align-items:center;gap:14px;flex:none;padding:13px clamp(20px,4vw,54px);
   border-top:1px solid var(--line);font-family:var(--m);font-size:10px;color:var(--dim);letter-spacing:.06em}
 .carry.on{display:flex}
@@ -267,8 +270,8 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   opacity:0;transition:.18s;backdrop-filter:blur(4px)}
 .cell:hover .pullbtn{opacity:1}
 .cell .pullbtn:hover{background:var(--signal)}
-.cell .pin{position:absolute;right:6px;top:6px;z-index:3;font-family:var(--m);font-size:9px;
-  color:#fff;background:var(--signal);padding:4px 6px;letter-spacing:.06em;line-height:1}
+.cell .pullbtn.pinned{opacity:1;background:var(--signal);color:#fff;font-family:var(--m);letter-spacing:.06em}
+.cell .pullbtn.pinned:hover{background:var(--signal)}
 
 /* ---------- TURN ---------- */
 #turn{overflow:hidden;touch-action:none}
@@ -398,6 +401,11 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
 /* ---------- responsive ---------- */
 @media (max-width:760px){
   :root{--barH:88px}
+  .weekhead{flex-direction:column;align-items:flex-start;gap:4px;padding-bottom:2px}
+  .weekdate{font-size:clamp(24px,7.4vw,40px);margin-top:4px}
+  .meter{min-width:0;width:100%;text-align:left}
+  .mline{max-width:170px}
+  .turnhint{display:none}
   /* four tabs will not fit beside the wordmark — give them their own row */
   header{flex-wrap:wrap;align-content:center;gap:0;row-gap:2px;
     padding:var(--safeT) calc(12px + var(--safeR)) 0 calc(12px + var(--safeL))}
@@ -414,7 +422,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   footer .seg{gap:9px}
   #saveState{font-size:8.5px;letter-spacing:.1em}
   .ghost{padding:8px 10px;letter-spacing:.14em}
-  .todayGrid{gap:22px;max-width:460px}
+  .todayGrid{gap:22px;max-width:460px;padding-top:38px}
 }
 @media (max-width:900px){
   .look .cap{height:46px;margin-top:10px;padding-top:8px}
@@ -444,7 +452,7 @@ main{position:fixed;inset:var(--bar) 0 var(--foot);z-index:10}
   .cell .cap{display:none}
   .look:hover .frame{transform:none}
   nav button{padding-top:13px;padding-bottom:13px}
-  .look .ctl button{padding:8px 10px}
+  .look .ctl button{padding:9px 0}
   .srcsw button{padding:10px 12px}
   .cell .pullbtn{padding:7px 9px}
 }
@@ -819,7 +827,7 @@ function updateSaveUI(){
 
 /* ================= state ================= */
 function narrow(){ return window.innerWidth<=760; }
-var SIZES={s:{wide:14,tight:4},m:{wide:8,tight:3},l:{wide:5,tight:2}};
+var SIZES={s:{wide:14,tight:4},m:{wide:8,tight:2},l:{wide:5,tight:1}};
 function colsFor(){ var k=SIZES[S.size]||SIZES.m; return narrow()?k.tight:k.wide; }
 var SORTS=["ADDED","ARTIST","YEAR","GENRE"];
 var SHOW=["UNHEARD","ALL","HEARD"];
@@ -1172,10 +1180,18 @@ function fitLineup(n){
     var c2=Math.max(1,Math.floor((W-padX*2+gap)/(minW+gap)));
     pick={c:Math.min(c2,n),cw:minW};
   }
+  var rows=Math.ceil(n/pick.c);
+  var needed=rows*(pick.cw+extra)+(rows-1)*gap;
+  rail.style.setProperty("--align", needed<=H-padY ? "center" : "start");
   rail.style.setProperty("--cols",pick.c);
   rail.style.setProperty("--cw",pick.cw+"px");
   rail.style.setProperty("--gap",gap+"px");
 }
+var ICO={
+ prev:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>',
+ next:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 4 8 8-8 8"/></svg>',
+ drop:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>'
+};
 function renderPulls(){
   var rail=$("#rail"), list=pulls(), heard=list.filter(function(a){ return a.played; }).length;
   $("#weekDate").textContent=weekLabel();
@@ -1202,8 +1218,11 @@ function renderPulls(){
       el.innerHTML='<div class="no">'+pad(i+1,2)+tag+'</div>'+
         '<div class="frame" tabindex="0"><img src="'+esc(a.artBig||a.art)+'" alt="'+esc(a.title)+'"></div>'+
         '<div class="cap"><b>'+esc(a.title)+'</b><span>'+esc(a.artist)+'</span></div>'+
-        '<div class="ctl"><button data-a="l">◀</button><button data-a="r">▶</button>'+
-        '<button data-a="x">Release</button></div>';
+        '<div class="ctl">'+
+          '<button data-a="l" aria-label="Move earlier" title="Move earlier">'+ICO.prev+'</button>'+
+          '<button data-a="r" aria-label="Move later" title="Move later">'+ICO.next+'</button>'+
+          '<button data-a="x" aria-label="Release from the week" title="Release">'+ICO.drop+'</button>'+
+        '</div>';
       var f=el.querySelector(".frame");
       f.addEventListener("click",function(){ openSheet(a); });
       f.addEventListener("keydown",function(e){ if(e.key==="Enter") openSheet(a); });
@@ -1247,58 +1266,85 @@ function renderPulls(){
 }
 
 /* ================= INDEX ================= */
+/* Cells are built once per album and then reused. Rebuilding the grid threw away
+   every <img>, so each pull re-downloaded the whole wall of artwork. */
+var cellCache={};
+function buildCell(a){
+  var c=document.createElement("div");
+  c.className="cell"; c.tabIndex=0;
+  c.innerHTML='<div class="thumb">'+
+      '<img loading="lazy" decoding="async" alt="">'+
+      '<span class="flag"></span>'+
+      '<button class="pullbtn"></button>'+
+      '<div class="cap"><b></b><span></span></div>'+
+    '</div>'+
+    '<div class="plate"><b></b><span></span></div>';
+  var img=c.querySelector("img");
+  if(img.getAttribute("src")!==a.art) img.src=a.art;
+  img.alt=a.title;
+  c.querySelector(".pullbtn").addEventListener("click",function(e){
+    e.stopPropagation();
+    if(togglePull(a)) refresh();
+  });
+  c.addEventListener("click",function(){ openSheet(a); });
+  c.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openSheet(a); } });
+  return c;
+}
+function updateCell(c,a){
+  c.classList.toggle("heard",!!a.played);
+  var img=c.querySelector("img");
+  if(img.getAttribute("src")!==a.art) img.src=a.art;      /* only ever reassigned if it truly changed */
+  c.querySelector(".flag").style.display=a.played?"none":"";
+  var pn=S.pullIdx[a.id], pb=c.querySelector(".pullbtn");
+  pb.textContent=pn?pad(pn,2):"Pull";
+  pb.className=pn?"pullbtn pinned":"pullbtn";
+  pb.title=pn?"Release from the week":"Pull for this week";
+  var sub=esc(a.artist)+" \u00b7 "+esc(a.year||a.genre);
+  c.querySelector(".cap b").textContent=a.title;
+  c.querySelector(".cap span").innerHTML=sub;
+  c.querySelector(".plate b").textContent=a.title;
+  c.querySelector(".plate span").innerHTML=sub;
+}
 function renderIndex(){
-  var g=$("#grid"), list=S.list;
+  var g=$("#grid"), list=S.list, host=$("#index");
   g.style.setProperty("--cols",colsFor());
   g.classList.toggle("labelled", S.size==="l" || (narrow()&&S.size!=="s"));
-  g.innerHTML="";
+  host.querySelectorAll(".void").forEach(function(n){ n.remove(); });
   if(!list.length){
-    $("#index").querySelectorAll(".void").forEach(function(n){ n.remove(); });
+    g.replaceChildren();
     var v=document.createElement("div");
     v.className="void";
     v.innerHTML='<h2>Nothing<br>filed here</h2><p>'+
       (S.albums.length?"No record matches this filter.":"Add a record to start the archive.")+'</p>';
-    $("#index").appendChild(v);
+    host.appendChild(v);
     var oe=document.getElementById("endplate"); if(oe) oe.remove();
     return;
   }
-  $("#index").querySelectorAll(".void").forEach(function(n){ n.remove(); });
-  var frag=document.createDocumentFragment();
+  var keep={}, nodes=[];
   list.forEach(function(a){
-    var c=document.createElement("div");
-    c.className="cell"+(a.played?" heard":"");
-    c.tabIndex=0;
-    var pn=S.pullIdx[a.id];
-    c.innerHTML='<div class="thumb"><img loading="lazy" src="'+esc(a.art)+'" alt="'+esc(a.title)+'">'+
-      (a.played?"":'<span class="flag"></span>')+
-      (pn?'<button class="pin" title="Release from the week">'+pad(pn,2)+'</button>':
-          '<button class="pullbtn">Pull</button>')+
-      '<div class="cap"><b>'+esc(a.title)+'</b><span>'+esc(a.artist)+" · "+esc(a.year||a.genre)+'</span></div>'+
-      '</div>'+
-      '<div class="plate"><b>'+esc(a.title)+'</b><span>'+esc(a.artist)+" · "+esc(a.year||a.genre)+'</span></div>';
-    var pb=c.querySelector(".pin,.pullbtn");
-    pb.addEventListener("click",function(e){
-      e.stopPropagation();
-      if(togglePull(a)) refresh();
-    });
-    c.addEventListener("click",function(){ openSheet(a); });
-    c.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openSheet(a); } });
-    frag.appendChild(c);
+    var c=cellCache[a.id];
+    if(!c){ c=buildCell(a); cellCache[a.id]=c; }
+    updateCell(c,a);
+    keep[a.id]=1; nodes.push(c);
   });
-  var nc=document.createElement("div");
-  nc.className="cell new"; nc.tabIndex=0;
-  nc.innerHTML='<div class="thumb"><b>+</b><span>Add</span></div>';
-  nc.addEventListener("click",openAdd);
-  nc.addEventListener("keydown",function(e){ if(e.key==="Enter") openAdd(); });
-  frag.appendChild(nc);
-  g.appendChild(frag);
+  Object.keys(cellCache).forEach(function(id){ if(!keep[id]) delete cellCache[id]; });
+  if(!g.__addTile){
+    var nc=document.createElement("div");
+    nc.className="cell new"; nc.tabIndex=0;
+    nc.innerHTML='<div class="thumb"><b>+</b><span>Add</span></div>';
+    nc.addEventListener("click",openAdd);
+    nc.addEventListener("keydown",function(e){ if(e.key==="Enter") openAdd(); });
+    g.__addTile=nc;
+  }
+  nodes.push(g.__addTile);
+  g.replaceChildren.apply(g,nodes);     /* moves the same elements — images keep their pixels */
   var old=document.getElementById("endplate"); if(old) old.remove();
   var ep=document.createElement("div");
   ep.className="endplate"; ep.id="endplate";
   ep.innerHTML='<span>End of archive</span><i class="grow"></i><span>'+
-    pad(list.length,3)+" shown · "+pad(S.albums.length,3)+" filed · "+
+    pad(list.length,3)+" shown \u00b7 "+pad(S.albums.length,3)+" filed \u00b7 "+
     pad(S.albums.filter(function(a){ return !a.played; }).length,3)+' unheard</span>';
-  $("#index").appendChild(ep);
+  host.appendChild(ep);
 }
 
 /* ================= TURN (3D arc) ================= */
